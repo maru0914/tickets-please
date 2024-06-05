@@ -35,8 +35,6 @@ class TicketController extends ApiController
         } catch (AuthorizationException $ex) {
             return $this->error('You are not authorized to update that resource', 401);
         }
-
-
     }
 
     /**
