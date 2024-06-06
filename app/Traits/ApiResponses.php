@@ -16,15 +16,30 @@ trait ApiResponses
         return response()->json([
             'data' => $data,
             'message' => $message,
-            'status' => $statusCode
+            'status' => $statusCode,
         ], $statusCode);
     }
 
-    protected function error($message, $statusCode): JsonResponse
+    protected function error($errors = [], $statusCode = null): JsonResponse
     {
+        if (is_string($errors)) {
+            return response()->json([
+                'message' => $errors,
+                'status' => $statusCode,
+            ], $statusCode);
+        }
+
         return response()->json([
+            'message' => $errors,
+        ]);
+    }
+
+    protected function notAuthorized($message): JsonResponse
+    {
+        return $this->error([
+            'status' => 401,
             'message' => $message,
-            'status' => $statusCode
-        ], $statusCode);
+            'source' => '',
+        ]);
     }
 }
