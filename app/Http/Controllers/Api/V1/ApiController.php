@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
 use App\Traits\ApiResponses;
+use Illuminate\Auth\AuthenticationException;
 
 class ApiController extends Controller
 {
@@ -24,8 +25,13 @@ class ApiController extends Controller
         return in_array(strtolower($relationship), $includeValues);
     }
 
-    public function isAble($ability, $targetModel)
+    public function isAble($ability, $targetModel): bool
     {
-        return $this->authorize($ability, [$targetModel, $this->policyClass]);
+        try {
+            $this->authorize($ability, [$targetModel, $this->policyClass]);
+            return true;
+        } catch (AuthenticationException $exception) {
+            return false;
+        }
     }
 }
